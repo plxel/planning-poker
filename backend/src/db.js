@@ -109,8 +109,6 @@ export const Task = {
       return false;
     }
 
-    console.log("estimate", user.id);
-
     task.estimations.push({ estimate, userId: user.id });
     return true;
   },

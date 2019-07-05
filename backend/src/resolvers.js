@@ -175,7 +175,6 @@ export default {
   },
   Estimation: {
     async user(parent) {
-      console.log("HERTR SLLLL");
       return User.find(parent.userId);
     }
   }
