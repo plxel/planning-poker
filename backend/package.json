@@ -1,0 +1,21 @@
+{
+  "name": "graphql-api",
+  "version": "0.0.0",
+  "main": "src/index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon --exec babel-node  --presets es2015,stage-2 src/index.js"
+  },
+  "dependencies": {
+    "apollo-server": "^2.6.4",
+    "graphql": "^14.3.1",
+    "nanoid": "^2.0.3"
+  },
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "nodemon": "^1.19.1"
+  }
+}
