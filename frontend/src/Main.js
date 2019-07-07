@@ -2,9 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Query, Mutation } from "react-apollo";
 import { gql } from "apollo-boost";
-import { Jumbotron, Button, Form, Col } from "react-bootstrap";
+import { Jumbotron, Button, Form, Row, Image, Col } from "react-bootstrap";
 import EnterRoom from "./EnterRoom";
-import { CenteredLayout } from './styled';
+import { CenteredLayout } from "./styled";
 
 const ME_QUERY = gql`
   query {
@@ -17,7 +17,7 @@ const ME_QUERY = gql`
   }
 `;
 
-function App() {
+function Main() {
   let input;
 
   return (
@@ -89,6 +89,17 @@ function App() {
                     input.value = "";
                   }}
                 >
+                  <Row className="justify-content-md-center">
+                    <Col md="auto">
+                      <Image
+                        roundedCircle
+                        src="/img/logo.png"
+                        width="200"
+                        alt="logo"
+                        className="main-logo"
+                      />
+                    </Col>
+                  </Row>
                   <Form.Row>
                     <Col>
                       <Form.Control
@@ -101,7 +112,7 @@ function App() {
                     </Col>
                     <Col>
                       <Button
-                        variant="primary"
+                        variant="dark"
                         type="submit"
                         disabled={input && !input.value}
                       >
@@ -119,4 +130,4 @@ function App() {
   );
 }
 
-export default App;
+export default Main;

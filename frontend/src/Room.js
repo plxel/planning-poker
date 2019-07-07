@@ -17,7 +17,7 @@ class MembersList extends React.Component {
     const { users, currentTask } = this.props;
     return (
       <ListGroup>
-        <ListGroup.Item variant="primary">Список участников</ListGroup.Item>
+        <ListGroup.Item variant="dark">Список участников</ListGroup.Item>
         {users.map(user => (
           <ListGroup.Item key={user.id}>
             {_.find(_.get(currentTask, "estimations", []), {
@@ -108,106 +108,110 @@ class Room extends React.Component {
   render() {
     return (
       <WithMe>
-        {me => (
-          <Query query={ROOM_QUERY} variables={{ roomId: this.roomId }}>
-            {({ subscribeToMore, loading, error, data }) => {
-              if (loading) {
-                return <p>Loading...</p>;
-              }
-              if (error) return <p>Error :(</p>;
+        {me =>
+          !me ? (
+            "Loading..."
+          ) : (
+            <Query query={ROOM_QUERY} variables={{ roomId: this.roomId }}>
+              {({ subscribeToMore, loading, error, data }) => {
+                if (loading) {
+                  return <p>Loading...</p>;
+                }
+                if (error) return <p>Error :(</p>;
 
-              if (!_.get(data, "rooms.byId")) {
-                return <Redirect to="/" />;
-              }
+                if (!_.get(data, "rooms.byId")) {
+                  return <Redirect to="/" />;
+                }
 
-              const room = _.get(data, "rooms.byId") || {};
+                const room = _.get(data, "rooms.byId") || {};
 
-              const currentTask = room.tasks.find(t => !t.completed);
+                const currentTask = room.tasks.find(t => !t.completed);
 
-              return (
-                <Container>
-                  <Row>
-                    <h1>{room.name}</h1>
-                  </Row>
-                  <Row>
-                    <Col xs={9}>
-                      <Estimation room={room} me={me} />
-                      <Tasks
-                        room={room}
-                        tasks={room.tasks}
-                        me={me}
-                        subscribeToMoreTasks={() => {
-                          subscribeToMore({
-                            document: ROOM_TASKS_SUBSCRIPTION,
-                            variables: { roomId: this.roomId },
-                            updateQuery: (prev, { subscriptionData }) => {
-                              if (!subscriptionData.data) {
-                                return prev;
-                              }
-
-                              if (!prev) {
-                                return;
-                              }
-
-                              const tasks =
-                                subscriptionData.data.roomTasksUpdated.tasks;
-
-                              return {
-                                rooms: {
-                                  byId: {
-                                    ...prev.rooms.byId,
-                                    tasks,
-                                    __typename: "Room"
-                                  },
-                                  __typename: "RoomsQuery"
+                return (
+                  <Container>
+                    <Row>
+                      <h1>{room.name}</h1>
+                    </Row>
+                    <Row>
+                      <Col xs={9}>
+                        <Estimation room={room} me={me} />
+                        <Tasks
+                          room={room}
+                          tasks={room.tasks}
+                          me={me}
+                          subscribeToMoreTasks={() => {
+                            subscribeToMore({
+                              document: ROOM_TASKS_SUBSCRIPTION,
+                              variables: { roomId: this.roomId },
+                              updateQuery: (prev, { subscriptionData }) => {
+                                if (!subscriptionData.data) {
+                                  return prev;
                                 }
-                              };
-                            }
-                          });
-                        }}
-                      />
-                    </Col>
-                    <Col>
-                      <MembersList
-                        users={_.get(data, "rooms.byId.users") || []}
-                        currentTask={currentTask}
-                        subscribeToMoreUsers={() =>
-                          subscribeToMore({
-                            document: ROOM_USERS_SUBSCRIPTION,
-                            variables: { roomId: this.roomId },
-                            updateQuery: (prev, { subscriptionData }) => {
-                              if (!subscriptionData.data) {
-                                return prev;
-                              }
-                              const prevUsers = prev.rooms.byId.users;
-                              const newUser =
-                                subscriptionData.data.userEnteredRoom.user;
 
-                              if (prevUsers.some(u => u.id === newUser.id)) {
-                                return prev;
-                              }
-
-                              return {
-                                rooms: {
-                                  byId: {
-                                    ...prev.rooms.byId,
-                                    users: [...prevUsers, newUser],
-                                    __typename: "Room"
-                                  },
-                                  __typename: "RoomsQuery"
+                                if (!prev) {
+                                  return;
                                 }
-                              };
-                            }
-                          })
-                        }
-                      />
-                    </Col>
-                  </Row>
-                </Container>
-              );
-            }}
-          </Query>
-        )}
+
+                                const tasks =
+                                  subscriptionData.data.roomTasksUpdated.tasks;
+
+                                return {
+                                  rooms: {
+                                    byId: {
+                                      ...prev.rooms.byId,
+                                      tasks,
+                                      __typename: "Room"
+                                    },
+                                    __typename: "RoomsQuery"
+                                  }
+                                };
+                              }
+                            });
+                          }}
+                        />
+                      </Col>
+                      <Col>
+                        <MembersList
+                          users={_.get(data, "rooms.byId.users") || []}
+                          currentTask={currentTask}
+                          subscribeToMoreUsers={() =>
+                            subscribeToMore({
+                              document: ROOM_USERS_SUBSCRIPTION,
+                              variables: { roomId: this.roomId },
+                              updateQuery: (prev, { subscriptionData }) => {
+                                if (!subscriptionData.data) {
+                                  return prev;
+                                }
+                                const prevUsers = prev.rooms.byId.users;
+                                const newUser =
+                                  subscriptionData.data.userEnteredRoom.user;
+
+                                if (prevUsers.some(u => u.id === newUser.id)) {
+                                  return prev;
+                                }
+
+                                return {
+                                  rooms: {
+                                    byId: {
+                                      ...prev.rooms.byId,
+                                      users: [...prevUsers, newUser],
+                                      __typename: "Room"
+                                    },
+                                    __typename: "RoomsQuery"
+                                  }
+                                };
+                              }
+                            })
+                          }
+                        />
+                      </Col>
+                    </Row>
+                  </Container>
+                );
+              }}
+            </Query>
+          )
+        }
       </WithMe>
     );
   }

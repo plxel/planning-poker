@@ -6,10 +6,17 @@ export const CenteredLayout = styled.div`
   justify-content: center;
 
   min-width: 100vw;
-  min-height: calc(100vh - 56px);
+  min-height: calc(100vh - 66px);
+
+  .main-logo {
+    margin-bottom: 50px;
+  }
 `;
 
 export const Logo = styled.div`
+  img {
+    filter: invert(1);
+  }
   a {
     color: #fff;
     &:hover,

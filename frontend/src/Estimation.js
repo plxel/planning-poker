@@ -28,15 +28,14 @@ const ESTIMATE_TASK_MUTATION = gql`
   }
 `;
 
-
 const Estimation = ({ room, me }) => {
   const taskToEstimate = room.tasks.find(t => !t.completed);
 
   if (!taskToEstimate) {
     return (
-      <div>
+      <EstimateWrapper>
         <h3>Добавьте задачи для оценки</h3>
-      </div>
+      </EstimateWrapper>
     );
   }
 

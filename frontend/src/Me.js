@@ -19,7 +19,7 @@ const WithMe = ({ children }) => (
       if (!loading && !error && data.users.me) {
         return children(data.users.me);
       }
-      return null;
+      return children();
     }}
   </Query>
 );
