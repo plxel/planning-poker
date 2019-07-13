@@ -1,11 +1,11 @@
-import { PubSub, withFilter } from "apollo-server";
-import { User, Room, Task } from "./db";
+const { PubSub, withFilter } = require("apollo-server");
+const { User, Room, Task } = require("./db");
 const pubsub = new PubSub();
 
 const USER_ENTERED_ROOM = "USER_ENTERED_ROOM";
 const ROOM_TASKS_UPDATED = "ROOM_TASKS_UPDATED";
 
-export default {
+module.exports.default = {
   Subscription: {
     userEnteredRoom: {
       subscribe: withFilter(
@@ -67,7 +67,7 @@ export default {
         });
       }
       return room;
-    },
+    }
   },
   RoomsMutation: {
     async create(parent, args, ctx, info) {

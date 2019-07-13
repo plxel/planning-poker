@@ -1,4 +1,4 @@
-import nanoid from "nanoid";
+const nanoid = require("nanoid");
 const userId = nanoid();
 const db = {
   users: [
@@ -27,7 +27,7 @@ const db = {
   ]
 };
 
-export const User = {
+const User = {
   async create(username) {
     if (db.users.find(u => username === u.username)) {
       return null;
@@ -51,7 +51,7 @@ export const User = {
   }
 };
 
-export const Room = {
+const Room = {
   async create(name, user) {
     const room = {
       id: nanoid(),
@@ -88,7 +88,7 @@ export const Room = {
   }
 };
 
-export const Task = {
+const Task = {
   async create({ roomId, title }) {
     const task = {
       id: nanoid(),
@@ -146,4 +146,8 @@ export const Task = {
   }
 };
 
-export default db;
+module.exports = {
+  User,
+  Room,
+  Task
+};
